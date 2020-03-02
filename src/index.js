@@ -1,10 +1,10 @@
-import css from './public/css'
-import ThemeProvider, {ThemeContext} from './public/ThemeProvider'
-import useStyles from './public/useStyles'
+import {Global, keyframes} from '@emotion/core'
+
+export {default as css} from './css'
+export {default as useStyles} from './useStyles'
+export {default as ThemeProvider} from './ThemeProvider'
 
 export {
-  css,
-  ThemeProvider,
-  ThemeContext,
-  useStyles,
+  Global,
+  keyframes,
 }

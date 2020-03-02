@@ -1,4 +1,4 @@
-import generateId from '../utils/generateId'
+import generateId from './generateId'
 
 export default (literals, ...expressions) => {
   const componentId = generateId()

@@ -1,11 +1,3 @@
-import by from '../public/by'
-import is, {isNot, isOr, isSomeNot, match} from '../public/by'
+export {default as by} from './by'
+export * from './is'
 
-export {
-  by,
-  is,
-  isNot,
-  isOr,
-  isSomeNot,
-  match,
-}

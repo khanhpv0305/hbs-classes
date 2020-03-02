@@ -1,5 +1,5 @@
-import {useState, useEffect, useContext, useCallback} from 'react'
-import stylis from 'stylis'
+import {useEffect, useContext, useCallback} from 'react'
+import stylis from '@emotion/stylis'
 import {get} from 'lodash-es'
 
 // Constants
@@ -9,9 +9,8 @@ import {venderName} from './config'
 import {ThemeContext} from './ThemeProvider'
 
 // Utils
-import generateClassName from '../utils/generateClassName'
-import getCssString from '../utils/getCssString'
-import usePrevious from '../utils/usePrevious'
+import generateClassName from './generateClassName'
+import getCssString from './getCssString'
 
 const renderCount = {}
 const blockStyle = {}
@@ -21,63 +20,38 @@ const headEl = document.head
 
 export default (classes) => {
   const blockId = generateClassName(null, JSON.stringify(classes))
-
-  const [isFirstRenderedBlock, setIsFirstRenderedBlock] = useState(false)
-
+  const getStyleEl = useCallback(() => document.getElementById(blockId), [blockId])
   const theme = useContext(ThemeContext)
 
-  const styleEl = document.createElement('style')
-
+  /* Every time Block was rendered, the counter of Block plus 1 */
   useEffect(() => {
     if (renderCount[blockId] === undefined) {
-      setIsFirstRenderedBlock(true)
-
       renderCount[blockId] = 1
     } else {
       renderCount[blockId] += 1
     }
   }, [blockId])
 
+  /* Every time Block was unmounted, the counter of Block minus 1 */
   useEffect(() => {
     return () => {
       renderCount[blockId] -= 1
     }
   }, [blockId])
 
+  /* Remove style tag and Block's data when the last Block was unmounted */
   useEffect(() => {
     return () => {
       if (renderCount[blockId] === 0) {
         delete renderCount[blockId]
         delete blockStyle[blockId]
         delete classNameList[blockId]
-
+        
+        const styleEl = getStyleEl()
         styleEl.remove()
       }
     }
-  }, [blockId])
-
-  useEffect(() => {
-    if (isFirstRenderedBlock) {
-      headEl.appendChild(styleEl)
-    }
-  }, [isFirstRenderedBlock])
-
-  useEffect(() => {
-    if (isFirstRenderedBlock) {
-      styleEl.innerHTML = blockStyle[blockId]
-    }
-  }, [blockId, isFirstRenderedBlock])
-
-  const previousBlockStyle = usePrevious(blockStyle[blockId])
-
-  useEffect(() => {
-    const currentBlockStyle = blockStyle[blockId]
-    const shouldInjectNewStyle = previousBlockStyle !== undefined && previousBlockStyle !== currentBlockStyle
-
-    if (shouldInjectNewStyle) {
-      styleEl.innerHTML = currentBlockStyle
-    }
-  }, [blockId, previousBlockStyle])
+  }, [blockId, getStyleEl])
 
   return useCallback((cpName, props = {}) => {
     const {
@@ -107,6 +81,18 @@ export default (classes) => {
       }
 
       blockStyle[blockId] += compiledCss
+
+      let styleEl = getStyleEl()
+
+      if (!styleEl) {
+        styleEl = document.createElement('style')
+        styleEl.setAttribute('id', blockId)
+        styleEl.setAttribute('type', 'text/css')
+
+        headEl.appendChild(styleEl)
+      }
+
+      styleEl.innerHTML = blockStyle[blockId]
     }
     
     if (process.env.NODE_ENV !== 'production') {
@@ -114,5 +100,5 @@ export default (classes) => {
     }
     
     return `${componentId} ${className}`
-  }, [classes, blockId, theme])
+  }, [classes, theme, blockId, getStyleEl])
 }

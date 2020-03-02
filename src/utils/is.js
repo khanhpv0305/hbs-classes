@@ -38,6 +38,4 @@ const isOr = styledIf('some', true)
 const isSomeNot = styledIf('some', false)
 const match = styledIf('match')
 
-export default is
-
-export {isNot, isOr, isSomeNot, match}
+export {is, isNot, isOr, isSomeNot, match}
