@@ -1,6 +1,8 @@
 import {useEffect, useContext, useCallback} from 'react'
-import stylis from '@emotion/stylis'
+import Stylis from '@emotion/stylis'
 import {get} from 'lodash-es'
+
+const stylis = new Stylis()
 
 // Constants
 import {venderName} from './config'
@@ -10,7 +12,7 @@ import {ThemeContext} from './ThemeProvider'
 
 // Utils
 import generateClassName from './generateClassName'
-import getCssString from './getCssString'
+import getCssString from './getCssString' 
 
 const renderCount = {}
 const blockStyle = {}
@@ -18,8 +20,8 @@ const classNameList = {}
 
 const headEl = document.head
 
-export default (classes) => {
-  const blockId = generateClassName(null, JSON.stringify(classes))
+const useStyles = (styles) => {
+  const blockId = generateClassName(null, JSON.stringify(styles))
   const getStyleEl = useCallback(() => document.getElementById(blockId), [blockId])
   const theme = useContext(ThemeContext)
 
@@ -57,7 +59,7 @@ export default (classes) => {
     const {
       styleData,
       componentId,
-    } = classes[cpName]
+    } = styles[cpName]
 
     const cssString = getCssString(styleData, props, theme)
     
@@ -100,5 +102,7 @@ export default (classes) => {
     }
     
     return `${componentId} ${className}`
-  }, [classes, theme, blockId, getStyleEl])
+  }, [styles, theme, blockId, getStyleEl])
 }
+
+export {useStyles as default}
