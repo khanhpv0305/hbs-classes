@@ -18,7 +18,6 @@ const blockStyle = {}
 const classNameList = {}
 
 const headEl = document.head
-const styleEl = document.createElement('style')
 
 export default (classes) => {
   const blockId = generateClassName(null, JSON.stringify(classes))
@@ -26,6 +25,8 @@ export default (classes) => {
   const [isFirstRenderedBlock, setIsFirstRenderedBlock] = useState(false)
 
   const theme = useContext(ThemeContext)
+
+  const styleEl = document.createElement('style')
 
   useEffect(() => {
     if (renderCount[blockId] === undefined) {
