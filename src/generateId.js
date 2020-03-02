@@ -1,5 +1,5 @@
 import generateComponentId from './generateComponentId'
-import {venderName} from '../public/config'
+import {venderName} from './config'
 
 var escapeRegex = /[[\].#*$><+~=|^:(),"'`-]+/g
 var dashesAtEnds = /(^-|-$)/g
