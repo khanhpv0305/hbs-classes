@@ -25,9 +25,7 @@ const getCssString = (styleData, props, theme) => {
     let expression
 
     if (isFunction(val)) {
-      console.log(val)
       const calculatedResult = val({...props, theme})
-      console.log(calculatedResult)
 
       if (calculatedResult.type === INTERPOLATION_TYPE) {
         expression = getCssString(calculatedResult, props, theme)
