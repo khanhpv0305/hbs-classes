@@ -124,7 +124,7 @@ export default App
 styles file
 ```
 import {css} from 'hbs-classes'
-import {by} from 'hbs-classes/utils
+import {by} from 'hbs-classes/utils'
 
 const styles = {}
 
